@@ -90,6 +90,7 @@ class WTween
     public static Play(wTweener : WTweener)
     {
         this.tweenTable.push(wTweener);
+        return wTweener;
     }
  
     public static Stop(wTweener : WTweener) 
