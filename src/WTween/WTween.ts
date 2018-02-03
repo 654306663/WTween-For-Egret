@@ -132,7 +132,7 @@ class WTween
                             })
                         }
                     }  
-                    if(this.tweenTable[i].step[0]["currentTime"] < this.tweenTable[i].step[0]["endTime"])
+                    if(this.tweenTable[i].step[0]["currentTime"] + pass < this.tweenTable[i].step[0]["endTime"])
                     {
                         this.tweenTable[i].step[0]["currentTime"] += pass;
                         this.DoTween(this.tweenTable[i].target, this.tweenTable[i].step[0])
