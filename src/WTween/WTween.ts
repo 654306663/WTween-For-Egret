@@ -33,7 +33,7 @@ class WTweener
     /// <param name="params">参数 格式为：{x:10,y:20}</param>  
     /// <param name="time">动画时长</param> 
     /// <param name="ease">缓动效果类型</param> 
-    public to(params : any, time : number, ease : WTweenType)
+    public to(params : any, time : number, ease : WTweenType = WTweenType.Linear)
     {
         var obj : any = {};
         obj.type = "to";
