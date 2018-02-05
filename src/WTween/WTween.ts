@@ -43,6 +43,13 @@ class WTweener
         obj.currentTime = 0;
         obj.ease = ease;
         obj.index = this.index++;
+        if(obj.index == 0)
+        {
+            for(var key in obj.startValues)
+            {
+                obj.startValues[key] = this.target[key];
+            }
+        }
         this.step.push(obj);
         if(this.loop != 0 && this.loop != 1)
             this.stepBackups.push(Tools.Copy(obj));
@@ -55,7 +62,6 @@ class WTweener
         var obj : any = {};
         obj.type = "call";
         obj.func = func;
-        obj.index = this.index++;
         this.step.push(obj);
         if(this.loop != 0 && this.loop != 1)
             this.stepBackups.push(Tools.Copy(obj));
@@ -69,7 +75,6 @@ class WTweener
         obj.type = "wait";
         obj.endTime = time;
         obj.currentTime = 0;
-        obj.index = this.index++;
         this.step.push(obj);
         if(this.loop != 0 && this.loop != 1)
             this.stepBackups.push(Tools.Copy(obj));
@@ -80,7 +85,7 @@ class WTweener
 class WTween
 { 
     private static tweenTable : Array<WTweener> = new Array();
- 
+
     /// 在Main.ts中初始化后调用该方法给WTween添加心跳
     public static Init()
     {
@@ -123,14 +128,16 @@ class WTween
                 case "to":              
                     if(this.tweenTable[i].step[0]["currentTime"] == 0)
                     {
-                        
-                        for(var key in this.tweenTable[i].step[0]["startValues"])
+                        if(this.tweenTable[i].step[0]["index"] != 0)
                         {
-                            this.tweenTable[i].step[0]["startValues"][key] = this.tweenTable[i].target[key];
-                            this.tweenTable[i].stepBackups.forEach((value,index,array)=>{
-                                if(value["index"] == this.tweenTable[i].step[0]["index"])
+                            for(var key in this.tweenTable[i].step[0]["startValues"])
+                            {  
+                                this.tweenTable[i].step[0]["startValues"][key] = this.tweenTable[i].target[key];
+                                this.tweenTable[i].stepBackups.forEach((value,index,array)=>{
+                                if(value["index"] != null && value["index"] == this.tweenTable[i].step[0]["index"])
                                     this.tweenTable[i].stepBackups[index]["startValues"][key] = this.tweenTable[i].target[key];
-                            })
+                                })
+                            }
                         }
                     }  
                     if(this.tweenTable[i].step[0]["currentTime"] + pass < this.tweenTable[i].step[0]["endTime"])
@@ -139,7 +146,7 @@ class WTween
                         this.DoTween(this.tweenTable[i].target, this.tweenTable[i].step[0])
                     }
                     else
-                    {
+                    { 
                         for(var key in this.tweenTable[i].step[0]["endValues"])
                             this.tweenTable[i].target[key] = this.tweenTable[i].step[0]["endValues"][key];
                         this.tweenTable[i].step.shift();
@@ -172,6 +179,7 @@ class WTween
                             {
                                 this.tweenTable[i].target[key] = this.tweenTable[i].stepBackups[j]["startValues"][key];
                             }
+                            break;
                         }
                     }
                 }
